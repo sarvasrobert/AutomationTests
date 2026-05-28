@@ -6,6 +6,9 @@ It covers positive and negative test cases for standard CRUD operations (Create,
 
 ## Prerequisites
 - Python 3.8+ installed on your system.
+- pytest 8.2.1
+- playwright 1.44.0
+- pytest-playwright 0.5.0
 
 ## Setup Instructions
 
@@ -16,15 +19,17 @@ It covers positive and negative test cases for standard CRUD operations (Create,
 
 
 2. **Create a virtual environment (Recommended):**
-
-python -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+   ```cmd
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
 
 3. **Install dependencies:**
-pip install -r requirements.txt
+   ```cmd
+   pip install -r requirements.txt
 
 4. **running the tests:**
-pytest test_crud.py -v
+   ```cmd
+   pytest test_crud.py -v
 
 
 "Note: Because JSONPlaceholder is a mock service, some negative tests (like missing required fields) return successful status codes. In a strict microservice environment, I would expect those tests to assert 400 Bad Request or 422 Unprocessable Entity."

@@ -4,43 +4,50 @@ This test suite automates the validation of critical API endpoints, covering bot
 - **Node.js** (v18 or higher) installed on your system.
 ## Setup Instructions
 1. **Open your terminal or Command Prompt and navigate to the project directory:**
-   ```cmd
-   cd [your/local/directory]
+
+      cmd
+      ```
+      cd [your/local/directory]
+```
 
 2. **Initialize an npm project (if you haven't already) and install the native Playwright Test framework:**
-cmd
 
-npm init -y
-npm install -D @playwright/test
+      cmd
+      ```
+      npm init -y
+      npm install -D @playwright/test
+      ```
 
 3. **Install Playwright dependencies (this ensures the Playwright environment is fully configured, even for API testing):**
-cmd
 
 
-npx playwright install
-
+      cmd
+      ```
+      npx playwright install
+      ```
 4. **Running the Tests in Playwright:**
-To execute the suite using the Playwright test runner in your command line, ensuring you are in C:\Playwright\tests\task1, run:
-cmd
+      To execute the suite using the Playwright test runner in your command line, run:
 
-
-npx playwright test
-
+      cmd
+      ```
+      npx playwright test
+      ```
 5. **Additional Execution Commands**
-Run in UI Mode: To visually step through the API requests and explore the responses natively in Playwright:
-cmd
+      Run in UI Mode: To visually step through the API requests and explore the responses natively in Playwright:
 
+      cmd
+      ```
+      npx playwright test --ui
+      ```
+      Run a Specific File: Focus the test run on just the CRUD or Auth tests:
 
-npx playwright test --ui
+      cmd
+      ```
+      npx playwright test Auth.spec.ts
+      ```
+      View the HTML Report: If any tests fail, or you want to see a detailed breakdown of the execution:
 
-Run a Specific File: Focus the test run on just the CRUD or Auth tests:
-cmd
-
-
-npx playwright test test_crud.spec.ts
-
-View the HTML Report: If any tests fail, or you want to see a detailed breakdown of the execution:
-cmd
-
-
-npx playwright show-report
+      cmd
+      ```
+      npx playwright show-report
+      ```

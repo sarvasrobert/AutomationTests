@@ -6,6 +6,7 @@ def get_basic_auth_header(username, password):
     credentials = f"{username}:{password}"
     encoded = base64.b64encode(credentials.encode()).decode()
     return {"Authorization": f"Basic {encoded}"}
+
 def test_basic_auth_positive(api):
     """
     Essential because: Legitimate users and systems must be able to authenticate successfully. 
@@ -17,7 +18,9 @@ def test_basic_auth_positive(api):
     assert response.status == 200
     
     data = response.json()
+    
     assert data["authenticated"] is True
+
 def test_basic_auth_negative_wrong_password(api):
     """
     Essential because: It validates that the security boundary is actually enforced. 
@@ -28,6 +31,7 @@ def test_basic_auth_negative_wrong_password(api):
     response = api.get("/basic-auth", headers=headers)
     
     assert response.status == 401
+
 def test_basic_auth_negative_missing_header(api):
     """
     Essential because: It ensures the endpoint does not default to open access 
@@ -38,6 +42,7 @@ def test_basic_auth_negative_missing_header(api):
     response = api.get("/basic-auth")
     
     assert response.status == 401
+
 def test_basic_auth_negative_wrong_auth_type(api):
     """
     Essential because: APIs must validate the authorization scheme being used. 
@@ -49,6 +54,7 @@ def test_basic_auth_negative_wrong_auth_type(api):
     response = api.get("/basic-auth", headers=headers)
     
     assert response.status == 401
+
 def test_basic_auth_negative_malformed_token(api):
     """
     Essential because: We must verify how the server handles unpredictable, corrupted, or 
@@ -73,7 +79,6 @@ def test_basic_auth_negative_wrong_username(api):
     
     assert response.status == 401    
 
-
 """ Empty credentials should be rejected to prevent null input handling issues that could lead to backend exceptions or unintended access."""
 def test_basic_auth_negative_empty_credentials(api):
     """
@@ -97,7 +102,7 @@ def test_basic_auth_negative_sql_injection_attempt(api):
     # Using a classic SQL injection string as the username
     headers = get_basic_auth_header("admin' OR '1'='1", "password")
     response = api.get("/basic-auth", headers=headers)
-    
+
     assert response.status == 401
 
 """ Bypassing via HTTP method manipulation is a critical security test. If the endpoint only secures GET requests but allows POST or PUT without authentication, it creates a severe vulnerability. This test ensures that all methods are protected equally."""

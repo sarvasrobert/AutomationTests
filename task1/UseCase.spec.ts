@@ -134,8 +134,6 @@ test.describe('Functional Tests:', () => {
 
         // Assert that the user is not logged out or redirected to the login page after timeout
         await expect(page).toHaveURL(/.*inventory\.html/);
-    
-    
     });
 
 });
