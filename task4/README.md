@@ -3,25 +3,35 @@ This repository contains automated API tests focusing on Authentication and Auth
 It covers one positive happy-path test, and several critical negative edge cases targeting the `/basic-auth` endpoint.
 ## Prerequisites
 - Python 3.8+ installed on your system.
-- pytest 8.2.1
-- playwright 1.44.0
-- pytest-playwright 0.5.0
+- pytest 9.0.3
+- playwright 1.60.0
+- pytest-playwright 0.8.0
 
 ## Setup Instructions
 1. **Clone the repository:**
-   ```bash
+   ```cmd
    git clone <your-repository-url>
    cd api-auth-automation
+   ```
 
 2. **Create a virtual environment (Recommended):**
-   ```bash
+   ```cmd
    python -m venv .venv
    source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+   ```
 
 3.  **Install dependencies:**
-   ```bash
+   ```cmd
    pip install -r requirements.txt
-
+   ```
+   
+   If you have problems to install requirements  use these cmmds.
+   ```cmd
+   pip install -U pytest
+   pip install pytest-playwright
+   ```
+   
 4.  **Running the tests:**
-   ```bash 
+   ```cmd
    pytest test_auth.py -v
+   ```

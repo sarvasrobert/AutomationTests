@@ -3,37 +3,19 @@
 //    - click on hamburger menu to open menu.
 //    - click each page in menu
 //    - test filtering of products
-//    - click cart to open cart page
+//    - click cart to open cart page and continue to checkout page
 //    - test redirect links in footer (linkedIn, Facebook, X)
 
 import { test, expect } from '@playwright/test';
 // Configuration
-const BASE_URL = 'https://www.saucedemo.com/';
-const PASSWORD = 'secret_sauce';
-// Array of users expected to successfully log in
-const validUsers = [
-  'standard_user',
-  'problem_user',
-  'performance_glitch_user',
-  'error_user',
-  'visual_user'
-];
-
+import * as Base from './helperFunctions';
 
 test.describe('UI Test Automation', () => {
   // Parameterized test: loops through all valid users
-  for (const user of validUsers) {
+  for (const user of Base.validUsers) {
     test(`MENU pages: ${user}`, async ({ page }) => {
-      // Navigate to the login page
-      await page.goto(BASE_URL);
-      // Fill in credentials using data-test attributes
-      await page.fill('[data-test="username"]', user);
-      await page.fill('[data-test="password"]', PASSWORD);
-      // Click the login button
-      await page.click('[data-test="login-button"]');
-      // Assert that we are redirected to the inventory page
-      await expect(page).toHaveURL(/.*inventory\.html/);
-      
+      // Login with valid credentials
+      await Base.StartLogin({page}, {user});
       // Take a screenshot of the inventory page
       await page.screenshot({ path: `screenshots/${user}_inventory.png` });  
       // Click the hamburger menu to open it
@@ -65,16 +47,8 @@ test.describe('UI Test Automation', () => {
 
 });
   test(`Footer links: ${user}`, async ({ page }) => {
-    // Navigate to the login page
-    await page.goto(BASE_URL);
-    // Fill in credentials using data-test attributes
-    await page.fill('[data-test="username"]', user);
-    await page.fill('[data-test="password"]', PASSWORD);
-    // Click the login button
-    await page.click('[data-test="login-button"]');
-    // Assert that we are redirected to the inventory page
-    await expect(page).toHaveURL(/.*inventory\.html/);
-
+    // Login with valid credentials
+    await Base.StartLogin({page}, {user});
     // Click on the LinkedIn link in the footer
     const [newPage_LinkedIn] = await Promise.all([
       page.context().waitForEvent('page'),
@@ -104,15 +78,8 @@ test.describe('UI Test Automation', () => {
 
   });
   test(`Product filtering: ${user}`, async ({ page }) => {
-    // Navigate to the login page
-    await page.goto(BASE_URL);
-    // Fill in credentials using data-test attributes
-    await page.fill('[data-test="username"]', user);
-    await page.fill('[data-test="password"]', PASSWORD); 
-    // Click the login button
-    await page.click('[data-test="login-button"]');
-    // Assert that we are redirected to the inventory page
-    await expect(page).toHaveURL(/.*inventory\.html/); 
+    // Login with valid credentials
+    await Base.StartLogin({page}, {user});
     // Test filtering of products
     await page.selectOption('[data-test="product-sort-container"]', 'hilo');
     await page.screenshot({ path: `screenshots/${user}_filtered.png` }); 
@@ -128,24 +95,15 @@ test.describe('UI Test Automation', () => {
   });
   // screenshot of cart page for each user
   test(`Cart page: ${user}`, async ({ page }) => {
-    // Navigate to the login page
-    await page.goto(BASE_URL);
-    // Fill in credentials using data-test attributes
-    await page.fill('[data-test="username"]', user);
-    await page.fill('[data-test="password"]', PASSWORD);
-    // Click the login button
-    await page.click('[data-test="login-button"]');
-    // Assert that we are redirected to the inventory page
-    await expect(page).toHaveURL(/.*inventory\.html/); 
+    // Login with valid credentials
+    await Base.StartLogin({page}, {user});
 
     await page.click('[data-test="shopping-cart-link"]');
-    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/.*cart\.html/);
     await page.screenshot({ path: `screenshots/${user}_cart.png` });
     
     await expect(page.locator(`[data-test="checkout"]`)).toBeVisible();
     await page.click('[data-test="checkout"]');
-    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/.*checkout-step-one\.html/);
     await expect(page.locator('[data-test="title"]')).toBeVisible();
     await page.screenshot({ path: `screenshots/${user}_checkout.png` });
@@ -154,31 +112,22 @@ test.describe('UI Test Automation', () => {
     await page.fill('[data-test="lastName"]', 'Doe');
     await page.fill('[data-test="postalCode"]', '12345');
     await page.click('[data-test="continue"]');
-    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/.*checkout-step-two\.html/);
     await expect(page.locator('[data-test="payment-info-label"]')).toBeVisible();
     await page.screenshot({ path: `screenshots/${user}_checkout_step_two.png` });
 
     await page.click('[data-test="finish"]');
-    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/.*checkout-complete\.html/);
     await expect(page.locator('[data-test="checkout-complete-container"]')).toBeVisible();
     await page.screenshot({ path: `screenshots/${user}_checkout_complete.png` });
 
     await page.click('[data-test="back-to-products"]');
-    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(/.*inventory\.html/);
   });
+
   test(`Products page: ${user}`, async ({ page }) => {
-    // Navigate to the login page
-    await page.goto(BASE_URL);
-    // Fill in credentials using data-test attributes
-    await page.fill('[data-test="username"]', user);
-    await page.fill('[data-test="password"]', PASSWORD);
-    // Click the login button
-    await page.click('[data-test="login-button"]');
-    // Assert that we are redirected to the inventory page
-    await expect(page).toHaveURL(/.*inventory\.html/);
+    // Login with valid credentials
+    await Base.StartLogin({page}, {user});
 
     await page.click('[data-test="item-4-title-link"]');
     await expect(page.locator('[data-test="back-to-products"]')).toBeVisible();

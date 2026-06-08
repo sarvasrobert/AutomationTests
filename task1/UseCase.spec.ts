@@ -16,31 +16,14 @@ Add to cart 2
 */
 
 import { test, expect } from '@playwright/test';
-// Configuration
-const BASE_URL = 'https://www.saucedemo.com/';
-const PASSWORD = 'secret_sauce';
-// Array of users expected to successfully log in
-const validUsers = [
-  'standard_user',
-  'problem_user',
-  'performance_glitch_user',
-  'error_user',
-  'visual_user'
-];
+import * as Base from './helperFunctions';
 
 test.describe('Functional Tests:', () => {
   // Parameterized test: loops through all valid users
-  for (const user of validUsers) {
+  for (const user of Base.validUsers) {
     test(`Add to cart: ${user}`, async ({ page }) => {
-        // Navigate to the login page
-        await page.goto(BASE_URL);
-        // Fill in credentials using data-test attributes
-        await page.fill('[data-test="username"]', user);
-        await page.fill('[data-test="password"]', PASSWORD);
-        // Click the login button
-        await page.click('[data-test="login-button"]');
-        // Assert that we are redirected to the inventory page
-        await expect(page).toHaveURL(/.*inventory\.html/);
+        // Login with valid credentials
+        await Base.StartLogin({page}, {user});
 
         // Add products to the cart and verify the cart badge updates correctly
         await page.click('[data-test="add-to-cart-sauce-labs-backpack"]');
@@ -94,15 +77,8 @@ test.describe('Functional Tests:', () => {
 
     });
     test(`Persistence of cart items after logout: ${user}`, async ({ page }) => {
-        // Navigate to the login page
-        await page.goto(BASE_URL);
-        // Fill in credentials using data-test attributes
-        await page.fill('[data-test="username"]', user);
-        await page.fill('[data-test="password"]', PASSWORD);
-        // Click the login button
-        await page.click('[data-test="login-button"]');
-        // Assert that we are redirected to the inventory page
-        await expect(page).toHaveURL(/.*inventory\.html/);
+        //login with valid credentials
+        await Base.StartLogin({page}, {user});
         // Add a product to the cart
         await page.click('[data-test="add-to-cart-sauce-labs-backpack"]');
         await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
@@ -111,11 +87,7 @@ test.describe('Functional Tests:', () => {
         await page.click('#logout_sidebar_link');  
 
         // Log back in with the same credentials
-        await page.fill('[data-test="username"]', user);
-        await page.fill('[data-test="password"]', PASSWORD);
-        await page.click('[data-test="login-button"]');
-        // Assert that we are redirected to the inventory page
-        await expect(page).toHaveURL(/.*inventory\.html/);
+        await Base.StartLogin({page}, {user});
         // Assert that the cart item is still present
         await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
 
@@ -123,15 +95,10 @@ test.describe('Functional Tests:', () => {
 };
     // Placeholder for timeout test - implementation depends on specific timeout behavior being tested
     test(`Timeout test `, async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.fill('[data-test="username"]', 'standard_user');
-        await page.fill('[data-test="password"]', PASSWORD);
-        await page.click('[data-test="login-button"]');
-        await expect(page).toHaveURL(/.*inventory\.html/);
-
+        // Login with valid credentials
+        await Base.StartLogin({page}, {user: 'standard_user'});
         // Simulate user inactivity or wait for a specific timeout duration
         await page.waitForSelector('[data-test="inventory_container"]', { state: 'hidden', timeout: 300000 }); // Wait for inventory container to disappear, indicating timeout
-
         // Assert that the user is not logged out or redirected to the login page after timeout
         await expect(page).toHaveURL(/.*inventory\.html/);
     });
